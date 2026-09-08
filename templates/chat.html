@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vessel</title>
+    <link rel="stylesheet" href="/static/style.css">
+ 
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+
+            <div class="brand">
+                <div class="brand-logo">V</div>
+                <span>Vessel</span>
+            </div>
+
+            <button
+                class="icon-button"
+                id="closeSidebarButton"
+                title="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <button
+            class="new-chat"
+            id="newChatButton"
+        >
+            <span>＋</span>
+            <span>New conversation</span>
+        </button>
+
+        <div class="sidebar-section">
+
+            <div class="section-title">
+                Conversations
+            </div>
+
+            <div
+                class="history-list"
+                id="historyList"
+            ></div>
+
+        </div>
+
+        <div class="sidebar-files">
+
+            <div class="sidebar-section">
+
+                <div class="section-title">
+                    Documents
+                </div>
+
+                <div
+                    class="file-list"
+                    id="fileList"
+                ></div>
+
+            </div>
+
+        </div>
+
+        <div class="sidebar-footer">
+
+            <button
+                class="footer-button"
+                id="uploadButton"
+            >
+                <span>↑</span>
+                <span>Upload document</span>
+            </button>
+
+            <button
+                class="footer-button"
+                id="settingsButton"
+            >
+                <span>⚙</span>
+                <span>Settings</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-actions">
+
+                <button
+                    class="icon-button mobile-menu"
+                    id="openSidebarButton"
+                    title="Menu"
+                >
+                    ☰
+                </button>
+
+                <div
+                    class="conversation-title"
+                    id="conversationTitle"
+                >
+                    New conversation
+                </div>
+
+            </div>
+
+            <div class="topbar-actions">
+
+                <button
+                    class="icon-button"
+                    id="topUploadButton"
+                    title="Upload document"
+                >
+                    ↑
+                </button>
+
+                <button
+                    class="icon-button"
+                    id="topSettingsButton"
+                    title="Settings"
+                >
+                    ⚙
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <div
+            class="chat-container"
+            id="chatContainer"
+        >
+
+            <div
+                class="chat"
+                id="chat"
+            >
+
+                <div
+                    class="welcome"
+                    id="welcome"
+                >
+
+                    <div class="welcome-logo">
+                        V
+                    </div>
+
+                    <h1>
+                        Vessel
+                    </h1>
+
+                    <p>
+                        Persian-optimized Retrieval-Augmented Generation.
+                        Upload your documents and ask questions about them.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         COMPOSER
+    ========================== -->
+
+    <div class="composer-wrapper">
+
+        <div
+            class="composer"
+            id="composer"
+        >
+
+            <textarea
+                id="messageInput"
+                rows="1"
+                placeholder="Ask Vessel something..."
+            ></textarea>
+
+            <button
+                class="send-button"
+                id="sendButton"
+                title="Send"
+            >
+                ↑
+            </button>
+
+        </div>
+
+        <div class="composer-hint">
+            Enter to send · Shift + Enter for new line · Drop files here to upload
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SETTINGS MODAL
+========================== -->
+
+<div
+    class="modal-overlay"
+    id="settingsModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+                Settings
+            </div>
+
+            <button
+                class="icon-button"
+                data-close-modal="settingsModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <!-- Ollama URL -->
+
+            <div class="setting">
+
+                <div class="setting-label-row">
+                    <label for="ollamaUrl">
+                        Ollama URL
+                    </label>
+                </div>
+
+                <div class="input-row">
+
+                    <input
+                        type="text"
+                        id="ollamaUrl"
+                        placeholder="http://localhost:11434"
+                    >
+
+                    <button
+                        class="refresh-button"
+                        id="refreshModelsButton"
+                        title="Refresh models"
+                    >
+                        ↻
+                    </button>
+
+                </div>
+
+                <div class="setting-description">
+                    Vessel uses Ollama to access local language and embedding models.
+                </div>
+
+            </div>
+
+
+            <!-- Embedding Model -->
+
+            <div class="setting">
+
+                <div class="setting-label-row">
+
+                    <label for="embeddingModel">
+                        Embedding Model
+                    </label>
+
+                </div>
+
+                <select id="embeddingModel">
+                    <option value="">
+                        Loading models...
+                    </option>
+                </select>
+
+                <div class="setting-description">
+                    Model used to generate document and query embeddings.
+                </div>
+
+            </div>
+
+
+            <!-- Chat Model -->
+
+            <div class="setting">
+
+                <div class="setting-label-row">
+
+                    <label for="chatModel">
+                        Chat Model
+                    </label>
+
+                </div>
+
+                <select id="chatModel">
+                    <option value="">
+                        Loading models...
+                    </option>
+                </select>
+
+                <div class="setting-description">
+                    Model used to generate the final answer.
+                </div>
+
+            </div>
+
+
+            <!-- Context Window -->
+
+            <div class="setting">
+
+                <div class="setting-label-row">
+
+                    <label for="contextWindow">
+                        Context Window
+                    </label>
+
+                </div>
+
+                <input
+                    type="number"
+                    id="contextWindow"
+                    min="512"
+                    max="131072"
+                    step="512"
+                    value="8192"
+                >
+
+                <div class="setting-description">
+                    Maximum context size sent to the chat model.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="secondary-button"
+                data-close-modal="settingsModal"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="primary-button"
+                id="saveSettingsButton"
+            >
+                Save settings
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     UPLOAD MODAL
+========================== -->
+
+<div
+    class="modal-overlay"
+    id="uploadModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+                Upload document
+            </div>
+
+            <button
+                class="icon-button"
+                data-close-modal="uploadModal"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div
+                class="upload-zone"
+                id="uploadZone"
+            >
+
+                <div class="upload-icon">
+                    ↑
+                </div>
+
+                <h3>
+                    Drop your document here
+                </h3>
+
+                <p>
+                    PDF, TXT, DOCX and other supported formats
+                </p>
+
+                <button
+                    class="primary-button"
+                    id="chooseFileButton"
+                >
+                    Choose file
+                </button>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    multiple
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TOAST
+========================== -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+
+<script>
+
+    /* =========================================================
+       CONFIGURATION
+    ========================================================= */
+
+    const API = {
+
+        chat: "/api/chat",
+
+        upload: "/api/files",
+
+        files: "/api/files",
+
+        conversations: "/api/conversations"
+
+    };
+
+
+    /* =========================================================
+       STATE
+    ========================================================= */
+
+    const state = {
+
+        currentConversation: null,
+
+        conversations: [],
+
+        files: [],
+
+        isGenerating: false,
+
+        models: [],
+
+        settings: {
+
+            ollamaUrl:
+                localStorage.getItem("vessel_ollama_url")
+                || "http://localhost:11434",
+
+            embeddingModel:
+                localStorage.getItem("vessel_embedding_model")
+                || "",
+
+            chatModel:
+                localStorage.getItem("vessel_chat_model")
+                || "",
+
+            contextWindow:
+                parseInt(
+                    localStorage.getItem("vessel_context_window")
+                    || "8192",
+                    10
+                )
+
+        }
+
+    };
+
+
+    /* =========================================================
+       DOM
+    ========================================================= */
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const chat =
+        document.getElementById("chat");
+
+    const chatContainer =
+        document.getElementById("chatContainer");
+
+    const welcome =
+        document.getElementById("welcome");
+
+    const messageInput =
+        document.getElementById("messageInput");
+
+    const sendButton =
+        document.getElementById("sendButton");
+
+    const composer =
+        document.getElementById("composer");
+
+    const conversationTitle =
+        document.getElementById("conversationTitle");
+
+    const historyList =
+        document.getElementById("historyList");
+
+    const fileList =
+        document.getElementById("fileList");
+
+    const settingsModal =
+        document.getElementById("settingsModal");
+
+    const uploadModal =
+        document.getElementById("uploadModal");
+
+    const ollamaUrl =
+        document.getElementById("ollamaUrl");
+
+    const embeddingModel =
+        document.getElementById("embeddingModel");
+
+    const chatModel =
+        document.getElementById("chatModel");
+
+    const contextWindow =
+        document.getElementById("contextWindow");
+
+    const refreshModelsButton =
+        document.getElementById("refreshModelsButton");
+
+    const uploadZone =
+        document.getElementById("uploadZone");
+
+    const fileInput =
+        document.getElementById("fileInput");
+
+    const toastContainer =
+        document.getElementById("toastContainer");
+
+
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+
+    function showToast(message) {
+
+        const toast =
+            document.createElement("div");
+
+        toast.className = "toast";
+
+        toast.textContent = message;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 3000);
+
+    }
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replaceAll("&", "&amp;")
+
+            .replaceAll("<", "&lt;")
+
+            .replaceAll(">", "&gt;")
+
+            .replaceAll('"', "&quot;")
+
+            .replaceAll("'", "&#039;");
+
+    }
+
+
+    function normalizeOllamaUrl(url) {
+
+        return url
+            .trim()
+            .replace(/\/+$/, "");
+
+    }
+
+
+    function generateId(prefix = "") {
+
+        return prefix
+            + Date.now()
+            + "_"
+            + Math.random()
+                .toString(36)
+                .substring(2, 8);
+
+    }
+
+
+    /* =========================================================
+       MODEL DETECTION
+    ========================================================= */
+
+    /*
+        Ollama /api/tags does not currently provide a universal
+        "model_type = embedding" field.
+
+        Therefore we use a name-based heuristic.
+
+        This is only for UI filtering.
+
+        The backend should still validate whether the selected
+        embedding model actually supports embeddings.
+    */
+
+    function isEmbeddingModel(modelName) {
+
+        const name =
+            modelName.toLowerCase();
+
+        const embeddingKeywords = [
+
+            "embed",
+
+            "embedding",
+
+            "nomic-embed",
+
+            "bge",
+
+            "e5",
+
+            "gte",
+
+            "mxbai",
+
+            "snowflake-arctic-embed",
+
+            "jina-embeddings",
+
+            "paraphrase-multilingual",
+
+            "sentence-transformer",
+
+            "minilm"
+
+        ];
+
+        return embeddingKeywords.some(
+            keyword =>
+                name.includes(keyword)
+        );
+
+    }
+
+
+    /* =========================================================
+       OLLAMA MODELS
+    ========================================================= */
+
+    async function loadOllamaModels() {
+
+        const url =
+            normalizeOllamaUrl(
+                ollamaUrl.value
+                || state.settings.ollamaUrl
+            );
+
+        if (!url) {
+
+            showToast("Ollama URL is empty.");
+
+            return;
+
+        }
+
+        refreshModelsButton.classList.add("loading");
+
+        refreshModelsButton.textContent = "…";
+
+        setModelSelectLoading();
+
+        try {
+
+            const response =
+                await fetch(
+                    `${url}/api/tags`
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    `HTTP ${response.status}`
+                );
+
+            }
+
+            const data =
+                await response.json();
+
+            const models =
+                Array.isArray(data.models)
+                    ? data.models
+                    : [];
+
+            state.models =
+                models
+                    .map(model => {
+
+                        return {
+
+                            name:
+                                model.name
+                                || model.model
+                                || "",
+
+                            size:
+                                model.size
+                                || 0,
+
+                            details:
+                                model.details
+                                || {}
+
+                        };
+
+                    })
+                    .filter(
+                        model =>
+                            model.name
+                    );
+
+            populateModelSelects();
+
+            if (state.models.length === 0) {
+
+                showToast(
+                    "No Ollama models were found."
+                );
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                "Failed to load Ollama models:",
+                error
+            );
+
+            showToast(
+                "Could not connect to Ollama."
+            );
+
+            showNoModels();
+
+        }
+        finally {
+
+            refreshModelsButton.classList.remove(
+                "loading"
+            );
+
+            refreshModelsButton.textContent = "↻";
+
+        }
+
+    }
+
+
+    function setModelSelectLoading() {
+
+        embeddingModel.innerHTML = `
+            <option value="">
+                Loading embedding models...
+            </option>
+        `;
+
+        chatModel.innerHTML = `
+            <option value="">
+                Loading chat models...
+            </option>
+        `;
+
+    }
+
+
+    function showNoModels() {
+
+        embeddingModel.innerHTML = `
+            <option value="">
+                No embedding models found
+            </option>
+        `;
+
+        chatModel.innerHTML = `
+            <option value="">
+                No chat models found
+            </option>
+        `;
+
+    }
+
+
+    function populateModelSelects() {
+
+        const embeddingModels =
+            state.models.filter(
+                model =>
+                    isEmbeddingModel(model.name)
+            );
+
+        const chatModels =
+            state.models.filter(
+                model =>
+                    !isEmbeddingModel(model.name)
+            );
+
+
+        /*
+            If Ollama contains only embedding models,
+            still allow them to appear in the chat list.
+
+            Likewise, if detection fails, all models are
+            available in the chat selector.
+        */
+
+        populateSelect(
+            embeddingModel,
+            embeddingModels,
+            state.settings.embeddingModel,
+            "Select embedding model"
+        );
+
+        populateSelect(
+            chatModel,
+            chatModels.length
+                ? chatModels
+                : state.models,
+            state.settings.chatModel,
+            "Select chat model"
+        );
+
+
+        /*
+            If saved embedding model was not detected as an
+            embedding model, add it anyway.
+
+            This prevents an existing configuration from
+            disappearing just because the heuristic changed.
+        */
+
+        ensureSelectedOption(
+            embeddingModel,
+            state.settings.embeddingModel
+        );
+
+        ensureSelectedOption(
+            chatModel,
+            state.settings.chatModel
+        );
+
+    }
+
+
+    function populateSelect(
+        select,
+        models,
+        selectedValue,
+        placeholder
+    ) {
+
+        select.innerHTML = "";
+
+        if (!models.length) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = "";
+
+            option.textContent =
+                `No ${placeholder
+                    .replace("Select ", "")
+                    .replace(" model", "")} models found`;
+
+            select.appendChild(option);
+
+            return;
+
+        }
+
+
+        const placeholderOption =
+            document.createElement("option");
+
+        placeholderOption.value = "";
+
+        placeholderOption.textContent =
+            placeholder;
+
+        select.appendChild(
+            placeholderOption
+        );
+
+
+        models.forEach(model => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                model.name;
+
+            option.textContent =
+                model.name;
+
+            if (
+                model.name ===
+                selectedValue
+            ) {
+
+                option.selected = true;
+
+            }
+
+            select.appendChild(option);
+
+        });
+
+    }
+
+
+    function ensureSelectedOption(
+        select,
+        value
+    ) {
+
+        if (!value) {
+            return;
+        }
+
+        const exists =
+            [...select.options]
+                .some(
+                    option =>
+                        option.value === value
+                );
+
+        if (exists) {
+            return;
+        }
+
+
+        const option =
+            document.createElement("option");
+
+        option.value = value;
+
+        option.textContent =
+            `${value} (saved)`;
+
+        option.selected = true;
+
+        select.appendChild(option);
+
+    }
+
+
+    /* =========================================================
+       SETTINGS
+    ========================================================= */
+
+    function openSettings() {
+
+        ollamaUrl.value =
+            state.settings.ollamaUrl;
+
+        contextWindow.value =
+            state.settings.contextWindow;
+
+        openModal(
+            "settingsModal"
+        );
+
+        /*
+            Refresh models every time settings opens.
+        */
+
+        loadOllamaModels();
+
+    }
+
+
+    function saveSettings() {
+
+        const url =
+            normalizeOllamaUrl(
+                ollamaUrl.value
+            );
+
+        const embedding =
+            embeddingModel.value;
+
+        const chat =
+            chatModel.value;
+
+        const context =
+            parseInt(
+                contextWindow.value,
+                10
+            );
+
+
+        state.settings.ollamaUrl =
+            url || "http://localhost:11434";
+
+        state.settings.embeddingModel =
+            embedding;
+
+        state.settings.chatModel =
+            chat;
+
+        state.settings.contextWindow =
+            Number.isFinite(context)
+                ? context
+                : 8192;
+
+
+        localStorage.setItem(
+            "vessel_ollama_url",
+            state.settings.ollamaUrl
+        );
+
+        localStorage.setItem(
+            "vessel_embedding_model",
+            state.settings.embeddingModel
+        );
+
+        localStorage.setItem(
+            "vessel_chat_model",
+            state.settings.chatModel
+        );
+
+        localStorage.setItem(
+            "vessel_context_window",
+            state.settings.contextWindow
+        );
+
+
+        closeModal(
+            "settingsModal"
+        );
+
+        showToast(
+            "Settings saved."
+        );
+
+    }
+
+
+    /* =========================================================
+       MODALS
+    ========================================================= */
+
+    function openModal(id) {
+
+        const modal =
+            document.getElementById(id);
+
+        if (modal) {
+
+            modal.classList.add("show");
+
+        }
+
+    }
+
+
+    function closeModal(id) {
+
+        const modal =
+            document.getElementById(id);
+
+        if (modal) {
+
+            modal.classList.remove("show");
+
+        }
+
+    }
+
+
+    document
+        .querySelectorAll(
+            "[data-close-modal]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    closeModal(
+                        button.dataset.closeModal
+                    );
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".modal-overlay")
+        .forEach(overlay => {
+
+            overlay.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target === overlay
+                    ) {
+
+                        overlay.classList.remove(
+                            "show"
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    /* =========================================================
+       CONVERSATIONS
+    ========================================================= */
+
+    function createConversation() {
+
+        const conversation = {
+
+            id:
+                generateId("conv_"),
+
+            title:
+                "New conversation",
+
+            messages:
+                []
+
+        };
+
+
+        state.conversations.unshift(
+            conversation
+        );
+
+        state.currentConversation =
+            conversation;
+
+
+        renderHistory();
+
+        renderChat();
+
+    }
+
+
+    function selectConversation(id) {
+
+        const conversation =
+            state.conversations.find(
+                item =>
+                    item.id === id
+            );
+
+        if (!conversation) {
+            return;
+        }
+
+        state.currentConversation =
+            conversation;
+
+        renderHistory();
+
+        renderChat();
+
+        closeMobileSidebar();
+
+    }
+
+
+    function renderHistory() {
+
+        historyList.innerHTML = "";
+
+
+        state.conversations.forEach(
+            conversation => {
+
+                const button =
+                    document.createElement("button");
+
+                button.className =
+                    "history-item"
+                    +
+                    (
+                        state.currentConversation
+                        &&
+                        state.currentConversation.id
+                            === conversation.id
+                            ? " active"
+                            : ""
+                    );
+
+
+                button.innerHTML = `
+
+                    <span class="history-icon">
+                        ◷
+                    </span>
+
+                    <span class="history-name">
+                        ${escapeHtml(
+                            conversation.title
+                        )}
+                    </span>
+
+                `;
+
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        selectConversation(
+                            conversation.id
+                        );
+
+                    }
+                );
+
+
+                historyList.appendChild(
+                    button
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       CHAT RENDERING
+    ========================================================= */
+
+    function renderChat() {
+
+        chat.innerHTML = "";
+
+
+        if (
+            !state.currentConversation
+            ||
+            !state.currentConversation.messages.length
+        ) {
+
+            chat.appendChild(
+                createWelcome()
+            );
+
+            conversationTitle.textContent =
+                state.currentConversation
+                    ?.title
+                    || "New conversation";
+
+            return;
+
+        }
+
+
+        conversationTitle.textContent =
+            state.currentConversation.title;
+
+
+        state.currentConversation.messages
+            .forEach(message => {
+
+                chat.appendChild(
+                    createMessageElement(
+                        message
+                    )
+                );
+
+            });
+
+
+        scrollToBottom();
+
+    }
+
+
+    function createWelcome() {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "welcome";
+
+        div.innerHTML = `
+
+            <div class="welcome-logo">
+                V
+            </div>
+
+            <h1>
+                Vessel
+            </h1>
+
+            <p>
+                Persian-optimized
+                Retrieval-Augmented Generation.
+                Upload your documents and ask questions about them.
+            </p>
+
+        `;
+
+        return div;
+
+    }
+
+
+    function createMessageElement(message) {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            `message ${message.role}`;
+
+
+        const avatar =
+            message.role === "user"
+                ? "U"
+                : "V";
+
+
+        let sourcesHtml = "";
+
+
+        if (
+            message.sources
+            &&
+            message.sources.length
+        ) {
+
+            sourcesHtml = `
+
+                <div class="sources">
+
+                    ${
+                        message.sources
+                            .map(
+                                source => `
+                                    <div class="source">
+                                        ${escapeHtml(source)}
+                                    </div>
+                                `
+                            )
+                            .join("")
+                    }
+
+                </div>
+
+            `;
+
+        }
+
+
+        wrapper.innerHTML = `
+
+            <div class="message-avatar">
+                ${avatar}
+            </div>
+
+            <div class="message-content">
+                ${escapeHtml(
+                    message.content
+                )}
+
+                ${sourcesHtml}
+            </div>
+
+        `;
+
+
+        return wrapper;
+
+    }
+
+
+    function addMessage(
+        role,
+        content,
+        sources = []
+    ) {
+
+        if (
+            !state.currentConversation
+        ) {
+
+            createConversation();
+
+        }
+
+
+        const message = {
+
+            id:
+                generateId("msg_"),
+
+            role,
+
+            content,
+
+            sources
+
+        };
+
+
+        state.currentConversation.messages
+            .push(message);
+
+
+        if (
+            role === "user"
+            &&
+            state.currentConversation.title
+                === "New conversation"
+        ) {
+
+            state.currentConversation.title =
+                content.length > 40
+                    ? content.substring(0, 40)
+                        + "..."
+                    : content;
+
+        }
+
+
+        renderHistory();
+
+        renderChat();
+
+    }
+
+
+    /* =========================================================
+       CHAT API
+    ========================================================= */
+
+    async function sendMessage() {
+
+        const text =
+            messageInput.value.trim();
+
+
+        if (!text) {
+            return;
+        }
+
+
+        if (state.isGenerating) {
+            return;
+        }
+
+
+        if (
+            !state.currentConversation
+        ) {
+
+            createConversation();
+
+        }
+
+
+        addMessage(
+            "user",
+            text
+        );
+
+
+        messageInput.value = "";
+
+        autoResizeTextarea();
+
+
+        state.isGenerating = true;
+
+        sendButton.disabled = true;
+
+
+        const typingElement =
+            addTypingMessage();
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API.chat,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            message: text,
+
+                            conversation_id:
+                                state.currentConversation.id,
+
+                            context_window:
+                                state.settings.contextWindow,
+
+                            embedding_model:
+                                state.settings.embeddingModel,
+
+                            model:
+                                state.settings.chatModel
+
+                        })
+
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    `HTTP ${response.status}`
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            removeTypingMessage(
+                typingElement
+            );
+
+
+            addMessage(
+
+                "assistant",
+
+                data.answer
+                    || data.response
+                    || "No answer was returned.",
+
+                Array.isArray(data.sources)
+                    ? data.sources
+                    : []
+
+            );
+
+        }
+        catch (error) {
+
+            console.error(
+                "Chat error:",
+                error
+            );
+
+
+            removeTypingMessage(
+                typingElement
+            );
+
+
+            addMessage(
+                "assistant",
+                "An error occurred while communicating with the server."
+            );
+
+            showToast(
+                "Chat request failed."
+            );
+
+        }
+        finally {
+
+            state.isGenerating = false;
+
+            sendButton.disabled = false;
+
+        }
+
+    }
+
+
+    function addTypingMessage() {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "message assistant";
+
+        wrapper.innerHTML = `
+
+            <div class="message-avatar">
+                V
+            </div>
+
+            <div class="message-content">
+
+                <div class="typing">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        chat.appendChild(
+            wrapper
+        );
+
+
+        scrollToBottom();
+
+
+        return wrapper;
+
+    }
+
+
+    function removeTypingMessage(element) {
+
+        if (element) {
+
+            element.remove();
+
+        }
+
+    }
+
+
+    /* =========================================================
+       FILES
+    ========================================================= */
+
+    async function uploadFiles(files) {
+
+        if (!files || !files.length) {
+            return;
+        }
+
+
+        for (const file of files) {
+
+            try {
+
+                const formData =
+                    new FormData();
+
+                formData.append(
+                    "file",
+                    file
+                );
+
+
+                const response =
+                    await fetch(
+                        API.upload,
+                        {
+
+                            method: "POST",
+
+                            body: formData
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
+
+                }
+
+
+                let data = null;
+
+
+                try {
+
+                    data =
+                        await response.json();
+
+                }
+                catch {
+                    data = null;
+                }
+
+
+                const uploadedFile = {
+
+                    id:
+                        data?.id
+                        || generateId("file_"),
+
+                    name:
+                        data?.name
+                        || file.name,
+
+                    size:
+                        data?.size
+                        || file.size
+
+                };
+
+
+                state.files.push(
+                    uploadedFile
+                );
+
+
+                showToast(
+                    `${file.name} uploaded.`
+                );
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Upload error:",
+                    error
+                );
+
+                showToast(
+                    `Failed to upload ${file.name}.`
+                );
+
+            }
+
+        }
+
+
+        renderFiles();
+
+    }
+
+
+    function renderFiles() {
+
+        fileList.innerHTML = "";
+
+
+        if (!state.files.length) {
+
+            const empty =
+                document.createElement("div");
+
+            empty.style.padding =
+                "8px 10px";
+
+            empty.style.color =
+                "var(--muted)";
+
+            empty.style.fontSize =
+                "11px";
+
+            empty.textContent =
+                "No documents";
+
+            fileList.appendChild(
+                empty
+            );
+
+            return;
+
+        }
+
+
+        state.files.forEach(file => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "file-item";
+
+
+            item.innerHTML = `
+
+                <span class="file-icon">
+                    ▫
+                </span>
+
+                <span class="file-name"
+                      title="${escapeHtml(file.name)}">
+
+                    ${escapeHtml(file.name)}
+
+                </span>
+
+            `;
+
+
+            fileList.appendChild(
+                item
+            );
+
+        });
+
+    }
+
+
+    async function loadFiles() {
+
+        try {
+
+            const response =
+                await fetch(
+                    API.files
+                );
+
+
+            if (!response.ok) {
+                return;
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (Array.isArray(data)) {
+
+                state.files =
+                    data;
+
+            }
+            else if (
+                Array.isArray(data.files)
+            ) {
+
+                state.files =
+                    data.files;
+
+            }
+
+
+            renderFiles();
+
+        }
+        catch (error) {
+
+            /*
+                It is acceptable for the frontend to work
+                without this endpoint during development.
+            */
+
+            console.debug(
+                "Could not load files:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       UI
+    ========================================================= */
+
+    function scrollToBottom() {
+
+        requestAnimationFrame(() => {
+
+            chatContainer.scrollTop =
+                chatContainer.scrollHeight;
+
+        });
+
+    }
+
+
+    function autoResizeTextarea() {
+
+        messageInput.style.height =
+            "auto";
+
+        messageInput.style.height =
+            Math.min(
+                messageInput.scrollHeight,
+                180
+            ) + "px";
+
+    }
+
+
+    function closeMobileSidebar() {
+
+        sidebar.classList.remove(
+            "open"
+        );
+
+    }
+
+
+    /* =========================================================
+       EVENTS
+    ========================================================= */
+
+    document
+        .getElementById("newChatButton")
+        .addEventListener(
+            "click",
+            () => {
+
+                createConversation();
+
+                closeMobileSidebar();
+
+            }
+        );
+
+
+    document
+        .getElementById("settingsButton")
+        .addEventListener(
+            "click",
+            openSettings
+        );
+
+
+    document
+        .getElementById("topSettingsButton")
+        .addEventListener(
+            "click",
+            openSettings
+        );
+
+
+    document
+        .getElementById("uploadButton")
+        .addEventListener(
+            "click",
+            () => {
+
+                openModal(
+                    "uploadModal"
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById("topUploadButton")
+        .addEventListener(
+            "click",
+            () => {
+
+                openModal(
+                    "uploadModal"
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById("openSidebarButton")
+        .addEventListener(
+            "click",
+            () => {
+
+                sidebar.classList.add(
+                    "open"
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById("closeSidebarButton")
+        .addEventListener(
+            "click",
+            closeMobileSidebar
+        );
+
+
+    document
+        .getElementById("saveSettingsButton")
+        .addEventListener(
+            "click",
+            saveSettings
+        );
+
+
+    refreshModelsButton
+        .addEventListener(
+            "click",
+            loadOllamaModels
+        );
+
+
+    /*
+        If the Ollama URL changes, don't immediately fetch
+        on every keystroke. User can press refresh.
+    */
+
+    ollamaUrl.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                loadOllamaModels();
+
+            }
+
+        }
+    );
+
+
+    sendButton.addEventListener(
+        "click",
+        sendMessage
+    );
+
+
+    messageInput.addEventListener(
+        "input",
+        autoResizeTextarea
+    );
+
+
+    messageInput.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+                &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       FILE INPUT
+    ========================================================= */
+
+    document
+        .getElementById("chooseFileButton")
+        .addEventListener(
+            "click",
+            () => {
+
+                fileInput.click();
+
+            }
+        );
+
+
+    fileInput.addEventListener(
+        "change",
+        async event => {
+
+            await uploadFiles(
+                event.target.files
+            );
+
+            fileInput.value = "";
+
+            closeModal(
+                "uploadModal"
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       DRAG & DROP
+    ========================================================= */
+
+    [
+        composer,
+        uploadZone
+    ]
+        .forEach(element => {
+
+            element.addEventListener(
+                "dragover",
+                event => {
+
+                    event.preventDefault();
+
+                    element.classList.add(
+                        "dragover"
+                    );
+
+                }
+            );
+
+
+            element.addEventListener(
+                "dragleave",
+                event => {
+
+                    event.preventDefault();
+
+                    element.classList.remove(
+                        "dragover"
+                    );
+
+                }
+            );
+
+
+            element.addEventListener(
+                "drop",
+                async event => {
+
+                    event.preventDefault();
+
+                    element.classList.remove(
+                        "dragover"
+                    );
+
+
+                    const files =
+                        event.dataTransfer.files;
+
+
+                    if (
+                        files
+                        &&
+                        files.length
+                    ) {
+
+                        await uploadFiles(
+                            files
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    /* =========================================================
+       INITIALIZATION
+    ========================================================= */
+
+    function initialize() {
+
+        /*
+            Start with one empty conversation.
+        */
+
+        createConversation();
+
+        renderFiles();
+
+        /*
+            Load existing files from backend.
+        */
+
+        loadFiles();
+
+        /*
+            Load Ollama models immediately.
+        */
+
+        ollamaUrl.value =
+            state.settings.ollamaUrl;
+
+        loadOllamaModels();
+
+        /*
+            Focus the input.
+        */
+
+        messageInput.focus();
+
+    }
+
+
+    initialize();
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,18 @@
+[project]
+name = "vessel-rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+    "langchain-text-splitters>=1.1.2",
+    "ollama>=0.6.2",
+]
+
+[project.scripts]
+vessel-rag = "vessel_rag:main"
+
+[build-system]
+requires = ["uv_build>=0.12.8,<0.13.0"]
+build-backend = "uv_build"
