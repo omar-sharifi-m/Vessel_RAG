@@ -5,7 +5,7 @@ from config import EMB_MODEL
 from uuid import uuid4
 import re
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
+import pymupdf
 def bulid_promp(query:str,context:list[str])->str:
     context_string = "\n\n".join(context)  
     prompt= f"""
@@ -239,3 +239,17 @@ class OllamaChat:
             ]
             
         )
+
+
+def text_extractor_pdf(file: bytes) -> str:
+    doc = pymupdf.open(stream=file,filetype="pdf")
+    pages = []
+    for page in doc:
+        text = page.get_text()
+        if text:
+            pages.append(text)
+    return "\n\n".join(pages)
+
+def text_extractor(content: bytes):
+    text = content.decode("utf-8")
+    return text
