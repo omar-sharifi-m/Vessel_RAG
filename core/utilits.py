@@ -1,12 +1,12 @@
 import ollama
 from typing import NamedTuple
 import chromadb
-from config import EMB_MODEL
+from config import EMB_MODEL,OLLAMA_URL
 from uuid import uuid4
 import re
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import pymupdf
-def bulid_promp(query:str,context:list[str])->str:
+def bulid_promp(query:str,context)->str:
     context_string = "\n\n".join(context)  
     prompt= f"""
     با استفاده از متن زیر به سؤال پاسخ بده.
@@ -37,9 +37,11 @@ class Embedding(NamedTuple):
     text: str
     embedding: list[float]
     
-def create_embedding(chunk:str, model:str=EMB_MODEL) -> Embedding:
-    response = ollama.embed(model=model, input=chunk)
+def create_embedding(chunk:str, model:str=EMB_MODEL,url:str=OLLAMA_URL) -> Embedding:
+    client =ollama.Client(url)
+    response = client.embed(model=model, input=chunk)
     return Embedding(text=chunk,embedding=response["embeddings"][0])
+
 
 
 class ChromaDB:
@@ -253,3 +255,4 @@ def text_extractor_pdf(file: bytes) -> str:
 def text_extractor(content: bytes):
     text = content.decode("utf-8")
     return text
+

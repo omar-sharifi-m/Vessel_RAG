@@ -4,14 +4,24 @@ from fastapi import UploadFile, File, HTTPException
 from pathlib import Path
 from uuid import uuid4
 from core.utilits import normalize_persian,create_persian_splitter,create_embedding,bulid_promp,OllamaChat,ChromaDB,text_extractor,text_extractor_pdf
-from config import EMB_MODEL,CHROMA_DB_PATH
-
+from config import EMB_MODEL,CHROMA_DB_PATH,OLLAMA_URL
+from core.models import ChatRequest,ChatResponse
 router = APIRouter(prefix="/api")
 
 
-@router.get("/chat")
-async def chat(request: Request):
-    return NotImplemented
+@router.get("/chat",response_model=ChatResponse)
+async def chat(request: ChatRequest):
+
+    message = normalize_persian(request.message)
+    embedding = create_embedding(message)
+    db = ChromaDB(CHROMA_DB_PATH)
+    db.connect()
+    data =db.retrieve(embedding)
+    prompt = bulid_promp(message,data.get("documents"))
+    ollama = OllamaChat(OLLAMA_URL)
+    response = ollama.ask_ollama(prompt,ChatRequest.model,ChatRequest.context_window)
+    
+    return ChatResponse(answer=response["message"]["content"])
 
 @router.post("/api/files")
 async def add_file(request: Request,
